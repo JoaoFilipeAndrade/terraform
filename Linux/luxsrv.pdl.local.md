@@ -323,9 +323,9 @@ cd easy-rsa/
 ./easyrsa init-pki
 ./easyrsa build-ca nopass
 ./easyrsa gen-req www.portugal.pt nopass
-./easyrsa gen-req www.portimao.pt nopass
+./easyrsa gen-req www.Portimao.pt nopass
 ./easyrsa --subject-alt-name="DNS:www.portugal.pt" sign-req server www.portugal.pt
-./easyrsa --subject-alt-name="DNS:www.Portimao.pt" sign-req server www.portimao.pt
+./easyrsa --subject-alt-name="DNS:www.Portimao.pt" sign-req server www.Portimao.pt
 ```
 Instalar o CA nos clientes e copiar os certificados para os servidores; forma mais fácil instalar o apache2 e colocar na raiz:
 ```

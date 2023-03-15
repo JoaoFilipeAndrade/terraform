@@ -79,28 +79,28 @@ dpkg -i /home/ubuntu/Downloads/Zoiper5_5.5.14_x86_64.deb
 rhcli.pdl.local
 
 ```
-sudo yum -y update
-sudo yum install -y amazon-linux-extras
-sudo amazon-linux-extras enable mate-desktop1.x
-sudo yum clean metadata
-sudo yum install mesa-dri-drivers dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts mate-session-manager mate-panel marco caja mate-terminal
-sudo nano /etc/sysconfig/network-scripts/ifcfg-eth0
-ping 1.1.1.1
-systemctl restart network
-ping 1.1.1.1
-sudo amazon-linux-extras enable firefox
-yum clean metadata
-yum install firefox
-sudo amazon-linux-extras enable epel
-yum clean metadata
-yum install epel-release
-yum install filezilla xrdp
-systemctl enable --now xrdp
-systemctl status  xrdp
-passwd ec2-user
-echo "/usr/bin/mate-session" > /home/ec2-user/.Xclients && chmod +x /home/ec2-user/.Xclients && chown ec2-user:ec2-user /home/ec2-user/.Xclients
-ls -l /home/ec2-user/.Xclients
-reboot
+    1  sudo yum -y update
+    2  sudo yum install -y amazon-linux-extras
+    3  sudo amazon-linux-extras enable mate-desktop1.x
+    4  yum clean metadata
+    5  yum install mesa-dri-drivers dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts mate-session-manager mate-panel marco caja mate-terminal
+    6  nano /etc/sysconfig/network-scripts/ifcfg-eth0
+    7  ping 1.1.1.1
+    8  systemctl restart network
+    9  ping 1.1.1.1
+   10  sudo amazon-linux-extras enable firefox
+   11  yum clean metadata
+   12  yum install firefox
+   13  sudo amazon-linux-extras enable epel
+   14  yum clean metadata
+   15  yum install epel-release
+   16  yum install filezilla xrdp
+   17  systemctl enable --now xrdp
+   18  systemctl status  xrdp
+   19  passwd ec2-user
+   20  echo "/usr/bin/mate-session" > /home/ec2-user/.Xclients && chmod +x /home/ec2-user/.Xclients && chown ec2-user:ec2-user /home/ec2-user/.Xclients
+   21  ls -l /home/ec2-user/.Xclients
+   22  reboot
 ```
 
 Entrar no GUI e fazer o download do Zoiper5 
