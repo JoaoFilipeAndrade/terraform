@@ -7,7 +7,7 @@ resource "aws_key_pair" "CyberSecurity" {
 resource "aws_vpc" "CyberSecurity" {
   cidr_block                           = "10.0.0.0/16"
   tags                                 = {
-    "Name" = "Cyber"
+    "Name" = "CyberSecurity"
   }
 }
 
@@ -83,7 +83,7 @@ resource "aws_route_table" "cyber_public1" {
     gateway_id = aws_internet_gateway.CyberSecurity-igw.id
   }
   tags             = {
-    "Name" = "Cyber-rtb-public"
+    "Name" = "CyberSecurity-rtb-public"
   }
 }
 
@@ -177,12 +177,22 @@ resource "aws_security_group" "cyber_default" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "cyber_home" {
-  cidr_ipv4              = "128.65.243.205/32"
+  cidr_ipv4         = "128.65.243.205/32"
+  description       = "Home"
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.cyber_default.id
+  tags              = {
+    "Name" = "Home IP address"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "cyber_myhome" {
+  cidr_ipv4              = "185.218.14.29/32"
   description            = "Home"
   ip_protocol            = "-1"
   security_group_id      = aws_security_group.cyber_default.id
   tags                   = {
-    "Name" = "Home IP address"
+    "Name" = "My Home IP address"
   }
 }
 
@@ -192,7 +202,7 @@ description            = "ENTA"
 ip_protocol            = "-1"
 security_group_id      = aws_security_group.cyber_default.id
 tags                   = {
-"Name" = "ENTA IP address Meo"
+"Name" = "ENTA IP address (Meo)"
   }
 }
 
@@ -206,7 +216,7 @@ resource "aws_vpc_security_group_ingress_rule" "cyber_nos_enta" {
   }
 }
 
-resource "aws_instance" "cyber_desktop" {
+resource "aws_instance" "desktop" {
   ami                                  = var.deb_based
   instance_type                        = var.desktop_type
   key_name                             = aws_key_pair.CyberSecurity.key_name
@@ -216,7 +226,7 @@ resource "aws_instance" "cyber_desktop" {
   }
   network_interface {
     device_index         = 1
-    network_interface_id = aws_network_interface.desktop_cyber_private1.id
+    network_interface_id = aws_network_interface.cyber_desktop_private1.id
   }
 
   tags                                 = {
@@ -233,7 +243,7 @@ resource "aws_instance" "cyber_desktop" {
   user_data = data.template_file.desktop.rendered
 }
 
-resource "aws_network_interface" "desktop_cyber_private1" {
+resource "aws_network_interface" "cyber_desktop_private1" {
   private_ips         = ["10.0.1.10"]
   security_groups    = [
     aws_security_group.cyber_default.id,
@@ -245,7 +255,7 @@ resource "aws_network_interface" "desktop_cyber_private1" {
   }
 }
 
-resource "aws_network_interface" "desktop_cyber_private2" {
+resource "aws_network_interface" "cyber_desktop_private2" {
   private_ips         = ["10.0.2.10"]
   security_groups    = [
     aws_security_group.cyber_default.id,
@@ -257,7 +267,7 @@ resource "aws_network_interface" "desktop_cyber_private2" {
   }
 }
 
-resource "aws_network_interface" "desktop_cyber_private3" {
+resource "aws_network_interface" "cyber_desktop_private3" {
   private_ips         = ["10.0.3.10"]
   security_groups    = [
     aws_security_group.cyber_default.id,
@@ -288,147 +298,6 @@ resource "aws_eip" "cyber_public_ip" {
     "Name" = "CyberSecurity public IP"
   }
   depends_on = [
-    aws_instance.cyber_desktop
+    aws_instance.desktop
   ]
 }
-
-
-
-/* Other Machine
-resource "aws_instance" "deb_pdl_local" {
-  ami                                  = var.deb_based
-  instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.CyberSecurity.key_name
-  network_interface {
-    device_index         = 0
-    network_interface_id = aws_network_interface.deb_pdl_private2.id
-  }
-  tags                                 = {
-    "Name" = "deb.pdl.local"
-  }
-  root_block_device {
-    delete_on_termination = true
-    tags                                 = {
-      "Name" = "Volume for deb.pdl.local"
-    }
-    volume_size           = 30
-    volume_type           = "gp2"
-  }
-  user_data = data.template_file.deb-pdl-local.rendered
-}
-
-resource "aws_network_interface" "deb_pdl_private2" {
-  private_ips         = ["10.0.2.101"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private2.id
-  tags                                 = {
-    "Name" = "PontaDelgada deb_pdl private interface"
-  }
-}
-
-resource "aws_instance" "rh_pdl_local" {
-  ami                                  = var.rh_based
-  instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.CyberSecurity.key_name
-  network_interface {
-    device_index         = 0
-    network_interface_id = aws_network_interface.rh_pdl_private2.id
-  }
-  tags                                 = {
-    "Name" = "rh.pdl.local"
-  }
-  root_block_device {
-    delete_on_termination = true
-    tags                                 = {
-      "Name" = "Volume for rh.pdl.local"
-    }
-    volume_size           = 30
-    volume_type           = "gp2"
-  }
-  user_data = data.template_file.rh-pdl-local.rendered
-}
-
-resource "aws_network_interface" "rh_pdl_private2" {
-  private_ips         = ["10.0.2.102"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private2.id
-  tags                                 = {
-    "Name" = "PontaDelgada rh_pdl private interface"
-  }
-}
-
-resource "aws_instance" "debcli_pdl_local" {
-  ami                                  = var.deb_based
-  instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.CyberSecurity.key_name
-  network_interface {
-    device_index         = 0
-    network_interface_id = aws_network_interface.debcli_pdl_private1.id
-  }
-  tags                                 = {
-    "Name" = "debcli.pdl.local"
-  }
-  root_block_device {
-    delete_on_termination = true
-    tags                                 = {
-      "Name" = "Volume for debcli.pdl.local"
-    }
-    volume_size           = 30
-    volume_type           = "gp2"
-  }
-  user_data = data.template_file.debcli-pdl-local.rendered
-}
-
-resource "aws_network_interface" "debcli_pdl_private1" {
-  private_ips         = ["10.0.1.101"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private1.id
-  tags                                 = {
-    "Name" = "PontaDelgada maria private interface"
-  }
-}
-
-resource "aws_instance" "rhcli_pdl_local" {
-  ami                                  = var.rh_based
-  instance_type                        = "t2.small"
-  key_name                             = aws_key_pair.CyberSecurity.key_name
-  network_interface {
-    device_index         = 0
-    network_interface_id = aws_network_interface.rhcli_pdl_private2.id
-  }
-  tags                                 = {
-    "Name" = "rhcli.pdl.local"
-  }
-  root_block_device {
-    delete_on_termination = true
-    tags                                 = {
-      "Name" = "Volume for rhcli.pdl.local"
-    }
-    volume_size           = 30
-    volume_type           = "gp2"
-  }
-  user_data = data.template_file.rhcli-pdl-local.rendered
-}
-
-resource "aws_network_interface" "rhcli_pdl_private2" {
-  private_ips         = ["10.0.1.102"]
-  security_groups    = [
-    aws_security_group.cyber_default.id,
-  ]
-  source_dest_check  = false
-  subnet_id          = aws_subnet.cyber_private1.id
-  tags                                 = {
-    "Name" = "PontaDelgada rhcli private interface"
-  }
-}
-
-*/
