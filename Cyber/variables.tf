@@ -22,3 +22,14 @@ variable "vpc_ep_svc_name" {
   type = string
   default = "com.amazonaws.us-east-1.s3"
 }
+
+variable "desktop_type" {
+  type = string
+  default = "c5a.large"
+}
+
+variable "onion_type" {
+  type = string
+  default = "c5a.large"
+}
+
